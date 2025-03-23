@@ -1,0 +1,30 @@
+measure Table
+		
+1. TOPN_SALES = 
+ var Rankvalue = RANKX(ALL(orders[city]),[sale_value],,desc)
+ var SelectedRank = SELECTEDVALUE(RankTable[no])
+ RETURN
+ IF(Rankvalue <= SelectedRank , [sale_value] ,BLANK())
+ 
+ 
+2.count_of_rating = count(orders[order_date])
+3.count_quantity = count(orders[type])
+4.Dynamic_title_topn_sale = var selectRank = SELECTEDVALUE(RankTable[type])
+                          var selectType = SELECTEDVALUE(Orders[type])
+        return
+        selectRank &  " city " &  selectType       
+5.order_count = count(orders[order_date])
+6.sale_value = sum(orders[Value])
+7.Table.RenameColumns(#"Replaced Value",{{"restaurant.city", "city"}})	
+
+---RANK Table
+RankTable = DATATABLE("sort", integer,"type", string , "no" , INTEGER,
+           {
+                {0 , "All",0},
+                {1 , "top 5", 5} ,
+                {2 , "top 10",10},
+                {3 , "top 20",20},
+                {4 , "top 50",50},
+                {5 , "top 100",100}
+          }
+        )	
